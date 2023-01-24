@@ -27,3 +27,6 @@ print(f3.tex())
 print('')
 print("Formula f3, Indented tree representation:")
 f3.treeView()
+
+f1 = Iff(And(A, Or(B, T)), C)
+print(f1.getVars())

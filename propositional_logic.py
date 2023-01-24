@@ -37,7 +37,7 @@ class BoolExpression(object):
     def NNF(self):
         return self
     def isNNF(self):
-        return False;
+        return False
 
 class TruthTable(object):
     def __init__(self, vars, interps, truthValues):
@@ -78,7 +78,7 @@ class BoolConst(BoolExpression):
     def removeImplications(self):
         return self
     def isLiteral(self):
-        return True 
+        return True
     def isAtom(self):
         return True
     def isNNF(self):
@@ -106,7 +106,7 @@ class BoolVar(BoolExpression):
     def isAtom(self):
         return True
     def isLiteral(self):
-        return True 
+        return True
     def isNNF(self):
         return True
 
@@ -125,8 +125,7 @@ class Not(BoolExpression):
         # Implement me!
         pass
     def getVars(self):
-        # Implement me!
-        pass
+        return self.exp.getVars()
     def simplify(self):
         # Implement me!
         pass
@@ -136,11 +135,9 @@ class Not(BoolExpression):
         # Implement me!
         pass
     def isLiteral(self):
-        # Implement me!
-        pass
+        return self.exp.isAtom()
     def isNNF(self):
-        # Implement me!
-        pass
+        return self.exp.isAtom()
 
 
 class And(BoolExpression):
@@ -158,8 +155,7 @@ class And(BoolExpression):
         # Implement me!
         pass
     def getVars(self):
-        # Implement me!
-        pass
+        return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
         pass
@@ -172,12 +168,11 @@ class And(BoolExpression):
     def removeImplications(self):
         # Implement me!
         pass
-    def isLiteral(self):
-        # Implement me!
-        pass
+    # def isLiteral(self):
+    #     # Implement me!
+    #     pass
     def isNNF(self):
-        # Implement me!
-        pass
+        return self.exp1.isNNF() and self.exp2.isNNF()
 
 
 class Or(BoolExpression):
@@ -195,8 +190,7 @@ class Or(BoolExpression):
         # Implement me!
         pass
     def getVars(self):
-        # Implement me!
-        pass
+        return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
         pass
@@ -209,12 +203,11 @@ class Or(BoolExpression):
     def removeImplications(self):
         # Implement me!
         pass
-    def isLiteral(self):
-        # Implement me!
-        pass
+    # def isLiteral(self):
+    #     # Implement me!
+    #     pass
     def isNNF(self):
-        # Implement me!
-        pass
+        return self.exp1.isNNF() and self.exp2.isNNF()
 
 class Implies(BoolExpression):
     def __init__(self, exp1, exp2):
@@ -231,8 +224,7 @@ class Implies(BoolExpression):
         # Implement me!
         pass
     def getVars(self):
-        # Implement me!
-        pass
+        return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
         pass
@@ -245,12 +237,11 @@ class Implies(BoolExpression):
     def removeImplications(self):
         # Implement me!
         pass
-    def isLiteral(self):
-        # Implement me!
-        pass
+    # def isLiteral(self):
+    #     # Implement me!
+    #     pass
     def isNNF(self):
-        # Implement me!
-        pass
+        return False
 
 class Iff(BoolExpression):
     def __init__(self, exp1, exp2):
@@ -267,8 +258,7 @@ class Iff(BoolExpression):
     def NNF(self):
         return Iff(self.exp1.NNF(), self.exp2.NNF())
     def getVars(self):
-        # Implement me!
-        pass
+        return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
         pass
@@ -281,14 +271,13 @@ class Iff(BoolExpression):
     def removeImplications(self):
         # Implement me!
         pass
-    def isLiteral(self):
-        # Implement me!
-        pass
+    # def isLiteral(self):
+    #     # Implement me!
+    #     pass
     def isNNF(self):
-        # Implement me!
-        pass
+        return False
 
-    
+
 
 def dictUnite(d1, d2):
     return dict(list(d1.items()) + list(d2.items()))
