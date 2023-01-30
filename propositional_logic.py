@@ -137,12 +137,13 @@ class Not(BoolExpression):
         return self.exp.getVars()
     def simplify(self):
         # Implement me!
-        if isinstance(self.exp, BoolConst):
-            return BoolConst(not self.exp.val)
-        elif isinstance(self.exp, Not):
-            return self.exp.exp.simplify()
+        temp = self.exp.simplify()
+        if isinstance(temp, BoolConst):
+            return BoolConst(not temp.val)
+        elif isinstance(temp, Not):
+            return temp.exp.simplify()
         else:
-            return Not(self.exp.simplify())
+            return Not(temp)
 
     def indented(self,d):
         return TABWIDTH*d*' ' + "Not\n" + self.exp.indented(d + 1) + "\n"
@@ -177,22 +178,25 @@ class And(BoolExpression):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
-        if isinstance(self.exp1, BoolConst):
-            if self.exp1.val == True:
-                return self.exp2.simplify()
+        temp1 = self.exp1.simplify()
+        temp2 = self.exp2.simplify()
+        if isinstance(temp1, BoolConst):
+            if temp1.val == True:
+                return temp2.simplify()
             else:
                 return BoolConst(False)
         
-        elif isinstance(self.exp2, BoolConst):
-            if self.exp2.val == True:
-                return self.exp1.simplify()
+        elif isinstance(temp2, BoolConst):
+            if temp2.val == True:
+                return temp1.simplify()
             else:
                 return BoolConst(False)
-        elif self.exp1 == self.exp2:
-            return self.exp1.simplify()
+        elif temp1 == temp2:
+            return temp1.simplify()
 
         else:
-            return And(self.exp1.simplify(), self.exp2.simplify()) 
+            return And(temp1, temp2) 
+
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "And\n"
@@ -230,22 +234,25 @@ class Or(BoolExpression):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
-        if isinstance(self.exp1, BoolConst):
-            if self.exp1.val == True:
+        temp1 = self.exp1.simplify()
+        temp2 = self.exp2.simplify()
+        if isinstance(temp1, BoolConst):
+            if temp1.val == True:
                 return BoolConst(True)
             else:
-                return self.exp2.simplify()
+                return temp2.simplify()
         
-        elif isinstance(self.exp2, BoolConst):
-            if self.exp2.val == True:
+        elif isinstance(temp2, BoolConst):
+            if temp2.val == True:
                 return BoolConst(True)
             else:
-                return self.exp1.simplify()
-        elif self.exp1 == self.exp2:
+                return temp1.simplify()
+        elif temp1 == temp2:
             return self.exp1.simplify()
 
         else:
-            return Or(self.exp1.simplify(), self.exp2.simplify()) 
+            return Or(temp1, temp2)
+            return BoolConst(self.exp1.simplify().val or self.exp2.simplify().val) 
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "Or\n"
