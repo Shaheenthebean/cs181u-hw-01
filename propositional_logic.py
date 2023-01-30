@@ -137,7 +137,13 @@ class Not(BoolExpression):
         return self.exp.getVars()
     def simplify(self):
         # Implement me!
-        pass
+        if isinstance(self.exp, BoolConst):
+            return BoolConst(not self.exp.val)
+        elif isinstance(self.exp, Not):
+            return self.exp.exp.simplify()
+        else:
+            return Not(self.exp.simplify())
+
     def indented(self,d):
         return TABWIDTH*d*' ' + "Not\n" + self.exp.indented(d + 1) + "\n"
     def removeImplications(self):
@@ -171,7 +177,22 @@ class And(BoolExpression):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
-        pass
+        if isinstance(self.exp1, BoolConst):
+            if self.exp1.val == True:
+                return self.exp2.simplify()
+            else:
+                return BoolConst(False)
+        
+        elif isinstance(self.exp2, BoolConst):
+            if self.exp2.val == True:
+                return self.exp1.simplify()
+            else:
+                return BoolConst(False)
+        elif self.exp1 == self.exp2:
+            return self.exp1.simplify()
+
+        else:
+            return And(self.exp1.simplify(), self.exp2.simplify()) 
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "And\n"
@@ -209,7 +230,22 @@ class Or(BoolExpression):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
         # Implement me!
-        pass
+        if isinstance(self.exp1, BoolConst):
+            if self.exp1.val == True:
+                return BoolConst(True)
+            else:
+                return self.exp2.simplify()
+        
+        elif isinstance(self.exp2, BoolConst):
+            if self.exp2.val == True:
+                return BoolConst(True)
+            else:
+                return self.exp1.simplify()
+        elif self.exp1 == self.exp2:
+            return self.exp1.simplify()
+
+        else:
+            return Or(self.exp1.simplify(), self.exp2.simplify()) 
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "Or\n"
