@@ -289,18 +289,20 @@ class Implies(BoolExpression):
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
-        if self.exp1 == BoolConst(True):
-            return self.exp2.simplify()
-        elif self.exp1 == BoolConst(False):
+        e1 = self.exp1.simplify()
+        e2 = self.exp2.simplify()
+        if e1 == BoolConst(True):
+            return e2
+        elif e1 == BoolConst(False):
             return BoolConst(True)
-        elif self.exp1 == self.exp2:
+        elif e1 == e2:
             return BoolConst(True)
-        elif self.exp2 == BoolConst(True):
-            return self.exp1.simplify()
-        elif self.exp2 == BoolConst(False):
-            return Not(self.exp1).simplify
+        elif e2 == BoolConst(True):
+            return e1
+        elif e2 == BoolConst(False):
+            return Not(e1)
         else:
-            return Implies(self.exp1.simplify(), self.exp2.simplify())
+            return Implies(e1, e2)
 
 
     def indented(self,d):
@@ -340,18 +342,20 @@ class Iff(BoolExpression):
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
-        if self.exp1 == BoolConst(True):
-            return self.exp2.simplify()
-        elif self.exp2 == BoolConst(True):
-            return self.exp1.simplify()
-        elif self.exp1 == BoolConst(False):
-            return Not(self.exp2.simplify())
-        elif self.exp2 == BoolConst(False):
-            return Not(self.exp1.simplify())
-        elif self.exp1 == self.exp2:
+        e1 = self.exp1.simplify()
+        e2 = self.exp2.simplify()
+        if e1 == BoolConst(True):
+            return e2
+        elif e2 == BoolConst(True):
+            return e1
+        elif e1 == BoolConst(False):
+            return Not(e2)
+        elif e2 == BoolConst(False):
+            return Not(e1)
+        elif e1 == e2:
             return BoolConst(True)
         else:
-            return Iff(self.exp1.simplify(), self.exp2.simplify())
+            return Iff(e1, e2)
 
 
     def indented(self,d):
