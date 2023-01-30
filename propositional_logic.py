@@ -127,9 +127,9 @@ class Not(BoolExpression):
         if temp.isNNF():
             return temp
         elif (isinstance(temp.exp, Or)):
-            return And(Not(temp.exp.exp1), Not(temp.exp.exp2)).NNF() 
+            return And(Not(temp.exp.exp1), Not(temp.exp.exp2)).NNF()
         elif (isinstance(temp.exp, And)):
-            return Or(Not(temp.exp.exp1), Not(temp.exp.exp2)).NNF() 
+            return Or(Not(temp.exp.exp1), Not(temp.exp.exp2)).NNF()
         elif (isinstance(temp.exp, Not)):
             return temp.exp.exp.NNF()
 
@@ -160,7 +160,7 @@ class And(BoolExpression):
         return "(" + self.exp1.tex() + " \\land " + self.exp2.tex() + ")"
     def eval(self, interp):
         # Implement me!
-        return BoolConst(self.exp1.eval(interp).val and self.exp2.eval(interp).val) 
+        return BoolConst(self.exp1.eval(interp).val and self.exp2.eval(interp).val)
 
     def NNF(self):
         # Implement me!
@@ -181,7 +181,7 @@ class And(BoolExpression):
     def removeImplications(self):
         # Implement me!
         return And(self.exp1.removeImplications(), self.exp2.removeImplications())
-        
+
     # def isLiteral(self):
     #     # Implement me!
     #     pass
@@ -218,7 +218,7 @@ class Or(BoolExpression):
         return result
     def removeImplications(self):
         # Implement me!
-        return Or(self.exp1.removeImplications(), self.exp2.removeImplications()) 
+        return Or(self.exp1.removeImplications(), self.exp2.removeImplications())
     # def isLiteral(self):
     #     # Implement me!
     #     pass
@@ -246,8 +246,20 @@ class Implies(BoolExpression):
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
-        # Implement me!
-        pass
+        if self.exp1 == BoolConst(True):
+            return self.exp2.simplify()
+        elif self.exp1 == BoolConst(False):
+            return BoolConst(True)
+        elif self.exp1 == self.exp2:
+            return BoolConst(True)
+        elif self.exp2 == BoolConst(True):
+            return self.exp1.simplify()
+        elif self.exp2 == BoolConst(False):
+            return Not(self.exp1).simplify
+        else:
+            return Implies(self.exp1.simplify(), self.exp2.simplify())
+
+
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "Implies\n"
@@ -285,8 +297,20 @@ class Iff(BoolExpression):
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
-        # Implement me!
-        pass
+        if self.exp1 == BoolConst(True):
+            return self.exp2.simplify()
+        elif self.exp2 == BoolConst(True):
+            return self.exp1.simplify()
+        elif self.exp1 == BoolConst(False):
+            return Not(self.exp2.simplify())
+        elif self.exp2 == BoolConst(False):
+            return Not(self.exp1.simplify())
+        elif self.exp1 == self.exp2:
+            return BoolConst(True)
+        else:
+            return Iff(self.exp1.simplify(), self.exp2.simplify())
+
+
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "Iff\n"
