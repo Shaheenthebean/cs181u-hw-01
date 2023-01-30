@@ -185,7 +185,7 @@ class And(BoolExpression):
                 return temp2.simplify()
             else:
                 return BoolConst(False)
-        
+
         elif isinstance(temp2, BoolConst):
             if temp2.val == True:
                 return temp1.simplify()
@@ -195,7 +195,7 @@ class And(BoolExpression):
             return temp1.simplify()
 
         else:
-            return And(temp1, temp2) 
+            return And(temp1, temp2)
 
     def indented(self,d):
         result = TABWIDTH*d*' '
@@ -241,7 +241,7 @@ class Or(BoolExpression):
                 return BoolConst(True)
             else:
                 return temp2.simplify()
-        
+
         elif isinstance(temp2, BoolConst):
             if temp2.val == True:
                 return BoolConst(True)
@@ -252,7 +252,7 @@ class Or(BoolExpression):
 
         else:
             return Or(temp1, temp2)
-            return BoolConst(self.exp1.simplify().val or self.exp2.simplify().val) 
+            return BoolConst(self.exp1.simplify().val or self.exp2.simplify().val)
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "Or\n"
@@ -338,7 +338,7 @@ class Iff(BoolExpression):
         val2 = self.exp2.eval(interp)
         return BoolConst(val1.val == val2.val)
     def NNF(self):
-        return Iff(self.exp1.NNF(), self.exp2.NNF())
+        return self.removeImplications().NNF()
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):

@@ -127,10 +127,10 @@ def test_simplify():
 	assert F == Or(F,F).simplify()
 	assert T == Or(T,F).simplify()
 	assert T == Or(F,T).simplify()
-	assert T == Or(And(T,T), Or(T,F)).simplify()
+    assert T == Or(And(T,T), Or(T,F)).simplify()
 
 	x = And(Or(A,B), Not(C))
-	assert x == Or(F, x).simplify()
+    assert x == Or(F, x).simplify()
 
 
     assert Iff(T, x).simplify() == x
