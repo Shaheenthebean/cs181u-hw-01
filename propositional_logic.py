@@ -120,10 +120,19 @@ class Not(BoolExpression):
         return '\\neg ' + self.exp.tex()
     def eval(self, interp):
         # Implement me!
-        pass
+        return BoolConst(not self.exp.eval(interp).val)
     def NNF(self):
         # Implement me!
-        pass
+        temp = self.removeImplications()
+        if temp.isNNF():
+            return temp
+        elif (isinstance(temp.exp, Or)):
+            return And(Not(temp.exp.exp1), Not(temp.exp.exp2)).NNF() 
+        elif (isinstance(temp.exp, And)):
+            return Or(Not(temp.exp.exp1), Not(temp.exp.exp2)).NNF() 
+        elif (isinstance(temp.exp, Not)):
+            return temp.exp.exp.NNF()
+
     def getVars(self):
         return self.exp.getVars()
     def simplify(self):
@@ -133,7 +142,8 @@ class Not(BoolExpression):
         return TABWIDTH*d*' ' + "Not\n" + self.exp.indented(d + 1) + "\n"
     def removeImplications(self):
         # Implement me!
-        pass
+        return Not(self.exp.removeImplications())
+
     def isLiteral(self):
         return self.exp.isAtom()
     def isNNF(self):
@@ -150,10 +160,13 @@ class And(BoolExpression):
         return "(" + self.exp1.tex() + " \\land " + self.exp2.tex() + ")"
     def eval(self, interp):
         # Implement me!
-        pass
+        return BoolConst(self.exp1.eval(interp).val and self.exp2.eval(interp).val) 
+
     def NNF(self):
         # Implement me!
-        pass
+        temp = self.removeImplications()
+        return And(temp.exp1.NNF(), temp.exp2.NNF())
+
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
@@ -167,7 +180,8 @@ class And(BoolExpression):
         return result
     def removeImplications(self):
         # Implement me!
-        pass
+        return And(self.exp1.removeImplications(), self.exp2.removeImplications())
+        
     # def isLiteral(self):
     #     # Implement me!
     #     pass
@@ -185,10 +199,12 @@ class Or(BoolExpression):
         return "(" + self.exp1.tex() + " \\lor " + self.exp2.tex() + ")"
     def eval(self, interp):
         # Implement me!
-        pass
+        return BoolConst(self.exp1.eval(interp).val or self.exp2.eval(interp).val)
+
     def NNF(self):
         # Implement me!
-        pass
+        temp = self.removeImplications()
+        return And(temp.exp1.NNF(), temp.exp2.NNF())
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
@@ -202,7 +218,7 @@ class Or(BoolExpression):
         return result
     def removeImplications(self):
         # Implement me!
-        pass
+        return Or(self.exp1.removeImplications(), self.exp2.removeImplications()) 
     # def isLiteral(self):
     #     # Implement me!
     #     pass
@@ -219,10 +235,14 @@ class Implies(BoolExpression):
         return "(" + self.exp1.tex() + " \\Rightarrow " + self.exp2.tex() + ")"
     def eval(self, interp):
         # Implement me!
-        pass
+        temp = self.removeImplications()
+        return BoolConst(temp.eval(interp).val)
+
     def NNF(self):
         # Implement me!
-        pass
+        temp = self.removeImplications()
+        return temp.NNF()
+
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
     def simplify(self):
@@ -235,8 +255,13 @@ class Implies(BoolExpression):
         result += self.exp2.indented(d + 1) + "\n"
         return result
     def removeImplications(self):
-        # Implement me!
-        pass
+        x = Or(Not(self.exp1).removeImplications(), self.exp2.removeImplications())
+        y = Not(self.exp1).removeImplications()
+        z = self.exp2.removeImplications()
+        print(f"y : {y}")
+        print(f"z : {z}")
+        return x
+
     # def isLiteral(self):
     #     # Implement me!
     #     pass
@@ -270,7 +295,7 @@ class Iff(BoolExpression):
         return result
     def removeImplications(self):
         # Implement me!
-        pass
+        return And(Implies(self.exp1, self.exp2).removeImplications(), Implies(self.exp2, self.exp1).removeImplications())
     # def isLiteral(self):
     #     # Implement me!
     #     pass

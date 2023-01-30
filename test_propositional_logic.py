@@ -73,6 +73,7 @@ def test_NNF():
 	assert Not(A.NNF()).isNNF()
 	assert Not(Not(Not(A)).NNF()).isNNF()
 	
+	print(Iff(A,T).NNF())
 	assert not Iff(A,T).NNF().isNNF()
 	assert not Not(Not(A).NNF()).isNNF()
 	assert not Not(Not(T).NNF()).isNNF()
