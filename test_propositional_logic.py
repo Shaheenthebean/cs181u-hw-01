@@ -121,20 +121,24 @@ def test_simplify():
 	# This is a placeholder test.
 	# You should write your own tests
 	# to make sure your simplify is working.
-	assert T == And(Or(T,F), Or(T,T)).simplify()
+
+ 
+
 
 	assert T == Or(T,T).simplify()
 	assert F == Or(F,F).simplify()
 	assert T == Or(T,F).simplify()
 	assert T == Or(F,T).simplify()
 	assert T == Or(And(T,T), Or(T,F)).simplify()
+	assert B == Or(B,B).simplify()
 
 	x = And(Or(A,B), Not(C))
 	assert x == Or(F, x).simplify()
 	assert A == And(A,A).simplify()
 	assert x == And(x,x).simplify()
-
-	assert B == Or(B,B).simplify()
+	assert F == And(F, x).simplify()
+	assert F == And(x, F).simplify()
+	assert T == And(Or(T,F), Or(T,T)).simplify()
 
 
     assert Iff(T, x).simplify() == x
