@@ -131,6 +131,10 @@ def test_simplify():
 
 	x = And(Or(A,B), Not(C))
 	assert x == Or(F, x).simplify()
+	assert A == And(A,A).simplify()
+	assert x == And(x,x).simplify()
+
+	assert B == Or(B,B).simplify()
 
 
 	
