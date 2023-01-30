@@ -23,13 +23,13 @@ def test_isAtom():
 	assert not And(A,B).isAtom()
 	assert not Iff(T, And(A,B)).isAtom()
 
-	    
+
 def test_isLiteral():
 	assert T.isLiteral()
-	assert F.isLiteral() 
-	assert A.isLiteral() 
-	assert Not(A).isLiteral() 
-	assert Not(T).isLiteral() 
+	assert F.isLiteral()
+	assert A.isLiteral()
+	assert Not(A).isLiteral()
+	assert Not(T).isLiteral()
 	assert not Not(Not(T)).isLiteral()
 	assert not And(T, F).isLiteral()
 
@@ -40,7 +40,7 @@ def test_getVars():
 	assert A.getVars() == [A] and allDistinct(A.getVars())
 	assert And(A,F).getVars() == [A] and allDistinct(And(A,F).getVars())
 
-	# for more than one variable convert 
+	# for more than one variable convert
 	# list to set in case order is different
 	assert set(And(A,B).getVars()) == set([A,B]) and allDistinct(And(A,B).getVars())
 	assert set(Iff(And(A,Or(B,T)), C).getVars()) == set([A,B,C]) and allDistinct(Iff(And(A,Or(B,T)), C).getVars())
@@ -72,7 +72,7 @@ def test_NNF():
 	assert Not(T.NNF()).isNNF()
 	assert Not(A.NNF()).isNNF()
 	assert Not(Not(Not(A)).NNF()).isNNF()
-	
+
 	print(Iff(A,T).NNF())
 	assert not Iff(A,T).NNF().isNNF()
 	assert not Not(Not(A).NNF()).isNNF()
@@ -85,18 +85,18 @@ def test_NNF():
 
 
 def test_removeImplications():
-	
+
 	assert T.removeImplications() == T
 	assert A.removeImplications() == A
 	assert Not(A).removeImplications() == Not(A)
 	assert And(A,F).removeImplications() == And(A,F)
 	assert Implies(A,B).removeImplications() == Or(Not(A),B)
-	
+
 	f = Not(Implies(A,Or(C,B)))
 	f_ = f.removeImplications()
 	assert f_ == Not(Or(Not(A), Or(C, B)))
 
-	# you probably want to write tests 
+	# you probably want to write tests
 	# that operate on Iff statements
 
 def test_eval():
@@ -113,16 +113,16 @@ def test_eval():
 
 	interp_2 = {A : F, B : F, C : T}
 	assert F == Iff(C, And(Not(A),B)).eval(interp_2)
-	assert T == Iff(Not(C), And(Not(A),B)).eval(interp_2) 
+	assert T == Iff(Not(C), And(Not(A),B)).eval(interp_2)
 	assert F == Implies(Iff(Not(C), And(Not(A),B)), And(T, Not(C))).eval(interp_2)
 
 
 def test_simplify():
 	# This is a placeholder test.
-	# You should write your own tests 
+	# You should write your own tests
 	# to make sure your simplify is working.
 	assert T == And(Or(T,F), Or(T,T)).simplify()
-	
+
 	assert T == Or(T,T).simplify()
 	assert F == Or(F,F).simplify()
 	assert T == Or(T,F).simplify()
@@ -133,5 +133,14 @@ def test_simplify():
 	assert x == Or(F, x).simplify()
 
 
-	
+    assert Iff(T, x).simplify() == x
+    assert Iff(x, T).simplify() == x
+    assert Iff(F, x).simplify() == Not(x)
+    assert Iff(x, F).simplify() == Not(x)
+    assert Iff(x, x).simplify() == T
 
+    assert Implies(T, x).simplify() == x
+    assert Implies(F, x).simplify() == x
+    assert Implies(x, x).simplify() == T
+    assert Implies(x, T).simplify() == x
+    assert Implies(x, F).simplify() == Not(x)
