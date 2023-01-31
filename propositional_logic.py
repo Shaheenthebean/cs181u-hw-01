@@ -280,7 +280,7 @@ class Implies(BoolExpression):
         elif e1 == e2:
             return BoolConst(True)
         elif e2 == BoolConst(True):
-            return e1
+            return e2
         elif e2 == BoolConst(False):
             return Not(e1)
         else:

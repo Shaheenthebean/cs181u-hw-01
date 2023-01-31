@@ -156,5 +156,5 @@ def test_simplify():
 	assert Implies(T, x).simplify() == x
 	assert Implies(F, x).simplify() == T
 	assert Implies(x, x).simplify() == T
-	assert Implies(x, T).simplify() == x
+	assert Implies(x, T).simplify() == T
 	assert Implies(x, F).simplify() == Not(x)
