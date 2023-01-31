@@ -121,6 +121,12 @@ def test_eval():
 	assert F == Iff(C, And(Not(A),B)).eval(interp_2)
 	assert T == Iff(Not(C), And(Not(A),B)).eval(interp_2)
 	assert F == Implies(Iff(Not(C), And(Not(A),B)), And(T, Not(C))).eval(interp_2)
+	
+	D = BoolVar("D")
+	E = BoolVar("E")
+	interp_3 = {A : F, B : F, C : T, D : T, E : F}
+	assert T == Or(And(Not(Implies(Iff(Not(C), And(Not(A),B)), And(T, Not(C)))), D), F).eval(interp_3)
+
 
 
 def test_simplify():
