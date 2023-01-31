@@ -119,10 +119,8 @@ class Not(BoolExpression):
     def tex(self):
         return '\\neg ' + self.exp.tex()
     def eval(self, interp):
-        # Implement me!
         return BoolConst(not self.exp.eval(interp).val)
     def NNF(self):
-        # Implement me!
         temp = self.removeImplications()
         if temp.isNNF():
             return temp
@@ -164,7 +162,6 @@ class And(BoolExpression):
     def tex(self):
         return "(" + self.exp1.tex() + " \\land " + self.exp2.tex() + ")"
     def eval(self, interp):
-        # Implement me!
         return BoolConst(self.exp1.eval(interp).val and self.exp2.eval(interp).val)
 
     def NNF(self):
@@ -219,7 +216,7 @@ class Or(BoolExpression):
 
     def NNF(self):
         temp = self.removeImplications()
-        return And(temp.exp1.NNF(), temp.exp2.NNF())
+        return Or(temp.exp1.NNF(), temp.exp2.NNF())
 
     def getVars(self):
         return list(set(self.exp1.getVars() + self.exp2.getVars()))
@@ -243,7 +240,6 @@ class Or(BoolExpression):
 
         else:
             return Or(temp1, temp2)
-            return BoolConst(self.exp1.simplify().val or self.exp2.simplify().val)
     def indented(self,d):
         result = TABWIDTH*d*' '
         result += "Or\n"
@@ -265,12 +261,9 @@ class Implies(BoolExpression):
     def tex(self):
         return "(" + self.exp1.tex() + " \\Rightarrow " + self.exp2.tex() + ")"
     def eval(self, interp):
-        # Implement me!
-        temp = self.removeImplications()
-        return BoolConst(temp.eval(interp).val)
+        return self.removeImplications().eval(interp)
 
     def NNF(self):
-        # Implement me!
         temp = self.removeImplications()
         return temp.NNF()
 

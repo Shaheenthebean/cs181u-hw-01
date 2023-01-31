@@ -83,6 +83,10 @@ def test_NNF():
 	assert not Not(And(Not(Not(T)),Not(A)).NNF()).isNNF()
 	assert not Not(Not(And(A,B)).NNF()).isNNF()
 
+	# More test
+	assert  Not(Or(Not(Not(T)),Not(A))).NNF().isNNF()
+	assert  Not(And(Not(C),A)).NNF().isNNF()
+	assert  Implies(A,T).NNF().isNNF()
 
 def test_removeImplications():
 
@@ -96,8 +100,6 @@ def test_removeImplications():
 	f_ = f.removeImplications()
 	assert f_ == Not(Or(Not(A), Or(C, B)))
 
-	# you probably want to write tests
-	# that operate on Iff statements
 	d = Iff(A,B)
 	d_ = d.removeImplications()
 
