@@ -98,6 +98,10 @@ def test_removeImplications():
 
 	# you probably want to write tests
 	# that operate on Iff statements
+	d = Iff(A,B)
+	d_ = d.removeImplications()
+
+	assert d_ == And(Or(Not(A), B), Or(Not(B), A))
 
 def test_eval():
 	interp_1 = {A : T, B : F}
@@ -121,10 +125,6 @@ def test_simplify():
 	# This is a placeholder test.
 	# You should write your own tests
 	# to make sure your simplify is working.
-
- 
-
-
 	assert T == Or(T,T).simplify()
 	assert F == Or(F,F).simplify()
 	assert T == Or(T,F).simplify()
@@ -140,15 +140,13 @@ def test_simplify():
 	assert F == And(x, F).simplify()
 	assert T == And(Or(T,F), Or(T,T)).simplify()
 
-
-    assert Iff(T, x).simplify() == x
-    assert Iff(x, T).simplify() == x
-    assert Iff(F, x).simplify() == Not(x)
-    assert Iff(x, F).simplify() == Not(x)
-    assert Iff(x, x).simplify() == T
-
-    assert Implies(T, x).simplify() == x
-    assert Implies(F, x).simplify() == x
-    assert Implies(x, x).simplify() == T
-    assert Implies(x, T).simplify() == x
-    assert Implies(x, F).simplify() == Not(x)
+	assert Iff(T, x).simplify() == x
+	assert Iff(x, T).simplify() == x 
+	assert Iff(F, x).simplify() == Not(x)
+	assert Iff(x, F).simplify() == Not(x)
+	assert Iff(x, x).simplify() == T
+	assert Implies(T, x).simplify() == x
+	assert Implies(F, x).simplify() == T
+	assert Implies(x, x).simplify() == T
+	assert Implies(x, T).simplify() == x
+	assert Implies(x, F).simplify() == Not(x)
